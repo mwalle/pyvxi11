@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 
 def main():
     setup(name = 'pyvxi11',
-            version = '0.1',
+            version = '0.2',
             description = 'Pure python VXI-11 library',
             author = 'Michael Walle',
             author_email = 'michael@walle.cc',
