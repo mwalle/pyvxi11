@@ -179,6 +179,10 @@ class Vxi11:
         if error != 0:
             raise RuntimeError('TBD')
 
+        # Some devices seem to return -1, but max_recv_size is unsigned.
+        # As a workaround we set an upper boundary of 16k
+        max_recv_size = min(max_recv_size, 16*1024)
+
         log.debug('link id is %d, max_recv_size is %d',
                 link_id, max_recv_size)
 
