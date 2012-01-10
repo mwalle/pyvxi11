@@ -194,15 +194,15 @@ class Vxi11:
         self.vxi11_client.destroy_link(self.link_id)
         self.vxi11_client.close()
 
-    def write(self, buf):
-        log.debug('Writing %d bytes (%s)', len(buf), buf)
+    def write(self, message):
+        log.debug('Writing %d bytes (%s)', len(message), message)
         io_timeout = self.io_timeout * 1000       # in ms
         lock_timeout = self.lock_timeout * 1000   # in ms
         flags = 0
         # split into chunks
-        buf_chunks = list(chunks(buf, self.max_recv_size))
-        for (n,chunk) in enumerate(buf_chunks):
-            if n == len(buf_chunks)-1:
+        msg_chunks = list(chunks(message, self.max_recv_size))
+        for (n,chunk) in enumerate(msg_chunks):
+            if n == len(msg_chunks)-1:
                 flags = OP_FLAG_END
             else:
                 flags = 0
@@ -211,6 +211,10 @@ class Vxi11:
             if error != ERR_NO_ERROR:
                 raise Vxi11Error(error)
             assert size == len(chunk)
+
+    def ask(self, message):
+        self.write(message)
+        return self.read()
 
     def read(self, size=None):
         if size is None:
