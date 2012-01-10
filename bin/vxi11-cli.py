@@ -59,10 +59,12 @@ def main():
             if cmd == 'q':
                 break
             if len(cmd) > 0:
+                is_query = cmd.split(' ')[0][-1] == '?'
                 try:
-                    v.write(cmd)
-                    if cmd[-1] == '?':
-                        print v.read()
+                    if is_query:
+                        print v.ask(cmd)
+                    else:
+                        v.write(cmd)
                 except Vxi11Error, e:
                     print 'ERROR: %s' % e
     except EOFError:
