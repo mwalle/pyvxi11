@@ -216,11 +216,8 @@ class Vxi11:
         self.write(message)
         return self.read()
 
-    def read(self, size=None):
-        if size is None:
-            read_size = self.max_recv_size
-        else:
-            read_size = size
+    def read(self):
+        read_size = self.max_recv_size
         io_timeout = self.io_timeout * 1000       # in ms
         lock_timeout = self.lock_timeout * 1000   # in ms
         reason = 0
@@ -235,7 +232,7 @@ class Vxi11:
             data_list.append(data)
             log.debug('Received %d bytes', len(data))
 
-            if size is None and (reason & REASON_REQCNT):
+            if reason & REASON_REQCNT:
                 reason &= ~REASON_REQCNT
 
         return ''.join(data_list)
