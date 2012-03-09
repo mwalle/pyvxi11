@@ -20,12 +20,13 @@
 # ends in '?' the response is received.
 #
 
+import os.path
 import sys
 import logging
 import readline
 from optparse import OptionParser
 
-from pyvxi11 import Vxi11, Vxi11Error
+from pyvxi11 import Vxi11, Vxi11Error, __version__
 
 def main():
     usage = 'usage: %prog [options] <host>'
@@ -34,8 +35,14 @@ def main():
             help='enable debug messages')
     parser.add_option('-v', action='store_true', dest='verbose',
             help='be more verbose')
+    parser.add_option('-V', action='store_true', dest='version',
+            help='show version')
 
     (options, args) = parser.parse_args()
+
+    if options.version:
+        print '%s v%s' % (os.path.basename(sys.argv[0]), __version__)
+        sys.exit(0)
 
     logging.basicConfig()
     if options.verbose:
