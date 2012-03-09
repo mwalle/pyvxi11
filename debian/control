@@ -1,0 +1,14 @@
+Source: pyvxi11
+Section: python
+Priority: optional
+Maintainer: Michael Walle <michael@walle.cc>
+Build-Depends: debhelper (>= 7.3.5), python-all-dev, python-support (>= 0.7.2)
+Standards-Version: 3.8.2
+
+Package: python-vxi11
+Architecture: all
+Depends: ${python:Depends}, ${misc:Depends}, ${shlibs:Depends}, python-pkg-resources
+Description: Native python VXI-11 implementation
+ pyVXI11 provides an VXI-11 implementation written in pure python code.
+ Besides the library itself, the package provides a small cli tool which can
+ be used to communicate with a VXI-11 enabled device.
