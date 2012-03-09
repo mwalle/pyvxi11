@@ -32,7 +32,11 @@ def main():
 			license = 'GPL 3+',
 			url = 'http://github.com/mwalle/pyvxi11',
             packages = find_packages(exclude=['tests']),
-            scripts = ['bin/vxi11-cli.py'],
+            entry_points = {
+                'console_scripts': [
+                    'vxi11-cli = pyvxi11.vxi11_cli:main',
+                ]
+            },
             test_suite = 'tests',
     )
 
