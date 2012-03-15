@@ -161,11 +161,12 @@ class Vxi11Error(Exception):
 
 
 class Vxi11:
-    def __init__(self, host, name=None):
+    def __init__(self, host, name=None, client_id=None):
         self.host = host
         self.io_timeout = 2
         self.lock_timeout = 2
         self.vxi11_client = Vxi11Client(host)
+        self.client_id = client_id
         if name is None:
             self.name = 'inst0'
         else:
@@ -173,8 +174,13 @@ class Vxi11:
 
     def open(self):
         log.info('Opening connection to %s', self.host)
+
+        # If no client id was given, get it from the Vxi11 object
+        client_id = self.client_id
+        if client_id is None:
+            client_id = id(self) & 0x7fffffff
         error, link_id, abort_port, max_recv_size = \
-                self.vxi11_client.create_link(id(self), 0, 0, self.name)
+                self.vxi11_client.create_link(client_id, 0, 0, self.name)
 
         if error != 0:
             raise RuntimeError('TBD')
