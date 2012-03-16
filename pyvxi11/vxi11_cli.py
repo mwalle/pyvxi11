@@ -21,12 +21,28 @@
 #
 
 import os.path
+import time
 import sys
 import logging
 import readline
 from optparse import OptionParser
 
 from pyvxi11 import Vxi11, Vxi11Error, __version__
+
+LOCAL_COMMANDS = {
+        '%SLEEP': (1, 1, lambda a: time.sleep(float(a[0])/1000)),
+}
+
+def process_local_command(cmd):
+    args = cmd.split()
+    if args[0] in LOCAL_COMMANDS:
+        cmd_info = LOCAL_COMMANDS[args[0]]
+        if cmd_info[0] <= len(args[1:]) <= cmd_info[1]:
+            cmd_info[2](args[1:])
+        else:
+            print 'Invalid number of arguments for command %s' % args[0]
+    else:
+        print 'Unknown command "%s"' % cmd
 
 def main():
     usage = 'usage: %prog [options] <host>'
@@ -65,6 +81,9 @@ def main():
             cmd = raw_input('=> ')
             if cmd == 'q':
                 break
+            if cmd.startswith('%'):
+                process_local_command(cmd)
+                continue
             if len(cmd) > 0:
                 is_query = cmd.split(' ')[0][-1] == '?'
                 try:
