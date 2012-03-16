@@ -53,6 +53,9 @@ def main():
             help='be more verbose')
     parser.add_option('-V', action='store_true', dest='version',
             help='show version')
+    parser.add_option('--always-check-esr', action='store_true',
+            dest='check_esr',
+            help='Check the error status register after every command')
 
     (options, args) = parser.parse_args()
 
@@ -91,6 +94,10 @@ def main():
                         print v.ask(cmd)
                     else:
                         v.write(cmd)
+                    if options.check_esr:
+                        esr = int(v.ask('*ESR?').strip())
+                        if esr != 0:
+                            print 'Warning: ESR was %d' % esr
                 except Vxi11Error, e:
                     print 'ERROR: %s' % e
     except EOFError:
